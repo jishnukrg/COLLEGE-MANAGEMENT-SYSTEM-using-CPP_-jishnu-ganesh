@@ -1,0 +1,411 @@
+// COLLEGE MANAGEMENT SYSTEM USING CPP - Jishnu Ganesh Developer
+
+//Include All Header files.
+#include <iostream>
+//#include <windows.h>
+#include <unistd.h>
+#include <conio.h>
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <fstream>
+using namespace std;
+
+class College_management
+{
+private:
+    // Variables for professor details
+    char name[30];
+    char id[5];
+    char designation[10];
+    int age, ctc;
+    char experience[20];
+
+public:
+    void menu();
+    void waitForEnter();
+    void insert();
+    void display();
+    void modify();
+    void search();
+    void deleted();
+};
+
+void College_management::menu() //Project Menu
+{
+    //int password_user; //login declaration
+    void password_user();
+    //login screen
+    while (true)
+    {
+        int choice;
+        char x; // Options to choose an action
+        //system("cls");
+        cout << "\n\t\t\t\t\t-------------------------------" << endl;
+        cout << "\t\t\t\t\t>> COLLEGE MANAGEMENT SYSTEM <<" << endl;
+        cout << "\t\t\t\t\t-------------------------------" << endl;
+        cout << "\t\t\t\t\t 1. Enter New Record" << endl;
+        cout << "\t\t\t\t\t 2. Display Record" << endl;
+        cout << "\t\t\t\t\t 3. Modify Record" << endl;
+        cout << "\t\t\t\t\t 4. Search Record" << endl;
+        cout << "\t\t\t\t\t 5. Delete Record" << endl;
+        cout << "\t\t\t\t\t 6. Exit" << endl;
+
+        cout << "\t\t\t\t\t.................................." << endl;
+        cout << "\t\t\t\t\t>> Choice Options: [1/2/3/4/5/6] <<" << endl;
+        cout << "\t\t\t\t\t.................................." << endl;
+        cout << " Enter Your Choice: "; // Taking the action input
+        cin >> choice;
+        // Calling relevant function as per choice
+        switch (choice)
+        {
+        case 1:
+            do
+            {
+                insert();
+                cout << "\n\n\t\t\t Add Another Professor Record Press (Y, N) : ";
+                cin >> x;
+            } while (x == 'y' || x == 'Y');
+            waitForEnter();
+            break;
+        case 2:
+            display();
+            break;
+        case 3:
+            modify();
+            break;
+        case 4:
+            search();
+            break;
+        case 5:
+            deleted();
+            break;
+        case 6:
+            //system("cls");
+            cout << "\n\t\t\t>> COLLEGE MANAGEMENT SYSTEM - By Jishnu Ganesh <<\n\n";
+            sleep(10);
+            exit(0);
+        default:
+            cout << "\n\n\t\t\t Invalid Choice... Please Try Again...\n";
+        }
+        getch();
+    }
+}
+
+void College_management::insert() // add data of professor
+{
+    //system("cls");
+    fstream file;
+    cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
+    cout << "------------------------------------- Professor Insert Data -------------------------------------------" << endl;
+    cout << "\n Enter Name of Professor: ";
+    cin >> name;
+    cout << "\n Enter Professor ID [max 4 digits]: ";
+    cin >> id;
+    cout << "\n Enter Designation: ";
+    cin >> designation;
+    cout << "\n Enter Professor Age: ";
+    cin >> age;
+    cout << "\n Enter Professor CTC: ";
+    cin >> ctc;
+    cout << "\n Enter Professor Experience: ";
+    cin >> experience;
+    file.open("Professor_Record.txt", ios::app | ios::out);
+    file << " " << name << " " << id << " " << designation << " " << age << " " << ctc << " " << experience << "\n";
+    file.close();
+}
+
+void College_management::display() // Display data of professor
+{
+    //system("cls");
+    int total = 1;
+    fstream file;
+    cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
+    cout << "------------------------------------- Professor Record Data -------------------------------------------" << endl;
+    file.open("Professor_Record.txt", ios::in);
+    if (!file)
+    {
+        cout << "\n\t\t\tNo Data is Present... ";
+        file.close();
+    }
+    else
+    {
+        file >> name >> id >> designation >> age >> ctc >> experience;
+        cout << "\n -------------------------------------------------------------------------------------------------";
+        cout << "\n||    NAME    ||    ID    ||    DESIGNATION    ||    AGE    ||      CTC      ||    EXPERIENCE    ||";
+        cout << "\n -------------------------------------------------------------------------------------------------";
+        while (!file.eof())
+        {
+            cout << "\n";
+            if (strlen(name)>5)
+            {
+            cout << total++ << ". " << name << "\t  " << id << " \t\t  " << designation << " \t\t   " << age << "  \t\t  " << ctc << " \t\t" << experience;
+            file >> name >> id >> designation >> age >> ctc >> experience;
+            }
+            else if(strlen(name)>3)
+            {
+                cout << total++ << ". " << name << "\t\t  " << id << " \t\t  " << designation << " \t\t   " << age << "  \t\t  " << ctc << " \t\t" << experience;
+            file >> name >> id >> designation >> age >> ctc >> experience;
+            }
+            else
+            {
+            cout << total++ << ". " << name << "  \t \t  " << id << " \t\t  " << designation << " \t\t   " << age << "  \t\t  " << ctc << " \t\t" << experience;
+            file >> name >> id >> designation >> age >> ctc >> experience;
+            }
+        }
+    }
+    file.close();
+    waitForEnter();
+}
+
+void College_management::modify() // Modify data of professor
+{
+    //system("cls");
+    char checkId[5];
+    int found = 0;
+    fstream file, file1;
+    cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
+    cout << "------------------------------------- Professor Modify Data ------------------------------------------" << endl;
+    file.open("Professor_Record.txt", ios::in);
+    if (!file)
+    {
+        cout << "\n\t\t\tNo Data is Present..";
+        file.close();
+    }
+    else
+    {
+        cout << "\nEnter Professor id: ";
+        cin >> checkId;
+        file1.open("record.txt", ios::app | ios::out);
+        file >> name >> id >> designation >> age >> ctc >> experience;
+        while (!file.eof())
+        {
+            if (strcmp(checkId, id) == 0)
+            {
+                cout << "\n Enter Name of ProfessProfessor: ";
+                cin >> name;
+                cout << "\n Enter ProfessProfessor ID [max 4 digits]: ";
+                cin >> id;
+                cout << "\n Enter Designation: ";
+                cin >> designation;
+                cout << "\n Enter ProfessProfessor Age: ";
+                cin >> age;
+                cout << "\n Enter ProfessProfessor CTC: ";
+                cin >> ctc;
+                cout << "\n Enter ProfessProfessor Experience: ";
+                cin >> experience;
+                cout << "\n\nSuccessfully Modify Details Of ProfessProfessor";
+                file1 << " " << name << " " << id << " " << designation << " " << age << " " << ctc << " " << experience << "\n";
+                found++;
+            }
+            else
+            {
+                file1 << " " << name << " " << id << " " << designation << " " << age << " " << ctc << " " << experience << "\n";
+            }
+            file >> name >> id >> designation >> age >> ctc >> experience;
+        }
+        if (found == 0)
+        {
+            cout << "\n\n\tProfessor ID Not Found.. Please Try Again";
+        }
+        file1.close();
+        file.close();
+        remove("Professor_Record.txt");
+        rename("record.txt", "Professor_Record.txt");
+    }
+    waitForEnter();
+}
+
+void College_management::search() // Search data of Professor
+{                                  //Displays all details according to Professor's id
+    //system("cls");
+    fstream file;
+    char checkId[5];
+    cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
+    cout << "------------------------------------- Professor Search Data -------------------------------------------" << endl;
+    file.open("Professor_Record.txt", ios::in);
+    cout << "\n\nEnter Professor ID: ";
+    cin >> checkId;
+    if (!file)
+    {
+        cout << "\n\t\t\tNo Data is Present... ";
+        file.close();
+    }
+    else
+    {
+        file >> name >> id >> designation >> age >> ctc >> experience;
+        while (!file.eof())
+        {
+            if (strcmp(checkId, id) == 0)
+            {
+                cout << "\n---------------------\n";
+                cout << "Professor Name: " << name << "\n";
+                cout << "Professor ID.: " << id << "\n";
+                cout << "Professor Designation: " << designation << "\n";
+                cout << "Professor Age: " << age << "\n";
+                cout << "Professor CTC: " << ctc << "\n";
+                cout << "Professor Experience: " << experience << "\n";
+                cout << "---------------------\n";
+            }
+            file >> name >> id >> designation >> age >> ctc >> experience;
+        }
+    }
+    file.close();
+    waitForEnter();
+}
+
+void College_management::deleted() // Delete data of Professor
+{
+    //system("cls");
+    char checkId[5];
+    fstream file, file1;
+    int found = 0;
+    cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
+    cout << "------------------------------------- Delete Professor Data ------------------------------------------" << endl;
+    file.open("Professor_Record.txt", ios::in);
+    if (!file)
+    {
+        cout << "\n\t\t\tNo Data is Present..";
+        file.close();
+    }
+    else
+    {
+        cout << "\nEnter Professor Id To Remove Data: ";
+        cin >> checkId;
+        file1.open("record.txt", ios::app | ios::out);
+        file >> name >> id >> designation >> age >> ctc >> experience;
+        while (!file.eof())
+        {
+            if (strcmp(checkId, id) != 0)
+            {
+                file1 << " " << name << " " << id << " " << designation << " " << age << " " << ctc << " " << experience << "\n";
+            }
+            else
+            {
+                found++;
+                cout << "\n\t\t\tSuccessfully Delete Data";
+            }
+            file >> name >> id >> designation >> age >> ctc >> experience;
+        }
+        if (found == 0)
+        {
+            cout << "\n\n\tProfessorID Not Found.. Please Try Again";
+        }
+        file1.close();
+        file.close();
+        remove("ProfessorRecord.txt");
+        rename("record.txt", "Professor_Record.txt");
+        waitForEnter();
+    }
+}
+
+void College_management::waitForEnter()
+{
+    cout << "\n\nPress enter to go back: ";
+    cin.get();
+} 
+
+void password_user() // Professor Authentication
+{
+    string pass_reg = "";
+    string name_reg = "";
+    string pass = "";
+    string name = "";
+    fstream file;
+    char ch;
+    //system("cls");
+    cout << "\n\t\t\t -------------------------------------------";
+    cout << "\n\t\t\t||  WELCOME TO COLLEGE MANAGEMENT SYSTEM  ||";
+    cout << "\n\t\t\t -------------------------------------------";
+    cout << "\n\n\t\t\t   -| Press: [1] Register & [2] Login  |-";
+    int selection;
+    cout << "\n\nPlease Enter Value: ";
+    cin >> selection;
+    // if user press [1], then it would lead them to register.
+    if (selection == 1)
+    {
+        //system("cls");
+        cout << "\n\t\t\t\t\t---------------------------";
+        cout << "\n\t\t\t\t\t>> REGISTRATION PROFESSOR <<";
+        cout << "\n\t\t\t\t\t---------------------------";
+        cout << "\n\n\t\t\t\t\tEnter Your Name: ";
+        cin >> name_reg;
+        cout << "\n\t\t\t\t\tEnter Your Password: ";
+        ch = getch();
+        while (ch != 13)
+        {
+            pass_reg.push_back(ch);
+            cout << '*';
+            ch = getch();
+        }
+        file.open("Ep_data.txt", ios::app);
+        file << " " << name_reg << " " << pass_reg << "\n";
+        file.close();
+        cout << "\nRegistration Succesfully save";
+        getch();
+        password_user();
+    }
+    // if user press [2], then it would lead them to login.
+    else if (selection == 2)
+    {
+        //system("cls");
+        file.open("Ep_data.txt", ios::in);
+        cout << "\n\t\t\t\t\t--------------------";
+        cout << "\n\t\t\t\t\t>> LOGIN PROFESSOR <<";
+        cout << "\n\t\t\t\t\t--------------------";
+        cout << "\n\n\t\t\t\t\tEnter Your Name: ";
+        cin >> name;
+        cout << "\n\t\t\t\t\tEnter Your Password: ";
+        ch = getch();
+        while (ch != 13)
+        {
+            pass.push_back(ch);
+            cout << '*';
+            ch = getch();
+        }
+        file >> name_reg >> pass_reg;
+        while (!file.eof())
+        {
+            if (pass == pass_reg && name == name_reg)
+            {
+                cout << "\n\n\n\t\t\t\t\t| Verfiying PROFESSOR |\n\t\t\t\t\t";
+                for (int a = 1; a < 8; a++)
+                {
+                    sleep(500);
+                    cout << "...";
+                }
+                cout << "\n\nAccess Granted..\n\n";
+                system("PAUSE");
+                system("cls");
+            }
+            else
+            {
+                cout << "\n\n\n\t\t\t\t\t| Verfiying PROFESSOR |\n\t\t\t\t\t";
+                for (int a = 1; a < 8; a++)
+                {
+                    sleep(500);
+                    cout << "...";
+                }
+                cout << "\n\nAccess Aborted...\n\n";
+                system("PAUSE");
+                system("cls");
+                password_user();
+            }
+            file >> name_reg >> pass_reg;
+        }
+        file.close();
+    }
+    else
+    {
+        cout << "\nInvalid Input.. Please Try Again..";
+        password_user();
+    }
+    //return 0;
+}
+int main()
+{
+    // Call the function
+    College_management system;
+    system.menu();
+    return 0;
+}
